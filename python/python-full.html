@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Python — الشرح الكامل</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --bg:#F4F7FB; --card:#fff; --border:#E2E8F0; --sidebar:#FAFBFD;
+  --blue:#3B6FF0; --blue-lt:#EBF1FF; --blue-dk:#2451C8;
+  --green:#0FAD6F; --green-lt:#E6F9F1;
+  --amber:#E8930A; --amber-lt:#FEF6E6;
+  --purple:#7C4EDB; --purple-lt:#F0EBFF;
+  --coral:#E05050; --coral-lt:#FFEBEB;
+  --slate:#64748B; --text:#0F1C2E;
+  --code-bg:#F0F4FC; --code-text:#1A3558;
+  --r:12px; --rl:16px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:var(--bg);color:var(--text);display:flex;font-size:14px}
+
+.sidebar{width:256px;flex-shrink:0;background:var(--sidebar);border-left:1px solid var(--border);height:100vh;position:sticky;top:0;display:flex;flex-direction:column;overflow-y:auto}
+.sb-brand{padding:20px 16px 14px;border-bottom:1px solid var(--border)}
+.sb-logo{width:38px;height:38px;border-radius:10px;background:var(--blue);display:flex;align-items:center;justify-content:center}
+.sb-logo svg{width:20px;height:20px;fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.sb-brand-row{display:flex;align-items:center;gap:10px}
+.sb-name{font-size:15px;font-weight:700;color:var(--text)}
+.sb-name small{display:block;font-size:11px;color:var(--slate);font-weight:400;margin-top:1px}
+.sb-nav{flex:1;padding:8px 8px 0}
+.sb-sec-label{font-size:10px;font-weight:700;color:#94A3B8;text-transform:uppercase;letter-spacing:1.2px;padding:10px 10px 4px}
+.nav-item{width:100%;display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:8px;border:none;background:none;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:13px;color:var(--slate);text-align:right;transition:all .13s}
+.nav-item:hover{background:#EEF2FF;color:var(--text)}
+.nav-item.active{background:var(--blue-lt);color:var(--blue);font-weight:600}
+.nav-item .ni-icon{font-size:14px;flex-shrink:0;width:20px;text-align:center}
+.nav-item .ni-label{flex:1}
+.nav-item .ni-badge{font-size:10px;font-family:'JetBrains Mono',monospace;padding:1px 6px;border-radius:4px;background:var(--border);color:var(--slate)}
+.nav-item.active .ni-badge{background:var(--blue);color:#fff}
+.nav-item .ni-done{width:16px;height:16px;border-radius:50%;background:var(--green);display:flex;align-items:center;justify-content:center;flex-shrink:0;opacity:0;transition:opacity .2s}
+.nav-item .ni-done svg{width:9px;height:9px;stroke:#fff;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+.nav-item.done .ni-done{opacity:1}
+.nav-item.done .ni-badge{display:none}
+.sb-footer{padding:12px 14px 16px;border-top:1px solid var(--border)}
+.sb-prog-lbl{display:flex;justify-content:space-between;font-size:11px;color:var(--slate);margin-bottom:6px}
+.sb-prog-lbl b{color:var(--blue)}
+.prog-track{height:5px;background:var(--border);border-radius:3px;overflow:hidden}
+.prog-bar{height:100%;background:linear-gradient(90deg,var(--blue),#6FB3FF);border-radius:3px;transition:width .4s ease}
+
+.main{flex:1;min-width:0;height:100vh;overflow-y:auto;display:flex;flex-direction:column}
+.ph{background:var(--card);border-bottom:1px solid var(--border);padding:28px 44px 22px;flex-shrink:0}
+.ph-eye{font-size:11px;font-weight:600;color:var(--blue);text-transform:uppercase;letter-spacing:1.3px;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.ph-eye::before{content:'';display:inline-block;width:14px;height:2px;background:var(--blue);border-radius:1px}
+.ph-title{font-size:24px;font-weight:700;color:var(--text);margin-bottom:7px;line-height:1.25}
+.ph-desc{font-size:13.5px;color:var(--slate);line-height:1.85;max-width:580px}
+.ph-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
+.tag{font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+.tag-b{background:var(--blue-lt);color:var(--blue-dk)}
+.tag-g{background:var(--green-lt);color:#065435}
+.tag-a{background:var(--amber-lt);color:#7A4800}
+.tag-p{background:var(--purple-lt);color:#4A1D9B}
+.tag-c{background:var(--coral-lt);color:#8B1515}
+
+.content{flex:1;padding:28px 44px 60px}
+.lesson{display:none}
+.lesson.active{display:block;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);padding:20px 24px;margin-bottom:18px}
+.card-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.card-ico{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.ico-b{background:var(--blue-lt)} .ico-g{background:var(--green-lt)} .ico-a{background:var(--amber-lt)} .ico-p{background:var(--purple-lt)} .ico-c{background:var(--coral-lt)}
+.card-title{font-size:14px;font-weight:700;color:var(--text)}
+.card p{font-size:13px;color:var(--slate);line-height:1.9;margin-bottom:10px}
+.card p:last-child{margin-bottom:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:18px}
+
+.cw{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin:12px 0}
+.cw-head{display:flex;align-items:center;justify-content:space-between;padding:7px 14px;background:#E2EBF6;border-bottom:1px solid var(--border)}
+.cw-lang{font-size:10px;font-weight:700;color:var(--blue);font-family:'JetBrains Mono',monospace}
+.cp-btn{font-size:11px;color:var(--slate);background:none;border:1px solid var(--border);border-radius:5px;padding:2px 9px;cursor:pointer;transition:all .12s;font-family:'IBM Plex Sans Arabic',sans-serif}
+.cp-btn:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+.cp-btn.ok{background:var(--green);color:#fff;border-color:var(--green)}
+pre{padding:18px;overflow-x:auto;font-family:'JetBrains Mono',monospace;font-size:12.5px;line-height:1.95;color:var(--code-text)}
+.kw{color:#1E40AF;font-weight:600} .fn{color:#065F46} .st{color:#92400E}
+.cm{color:#94A3B8;font-style:italic} .nm{color:#5B21B6} .cl{color:#1E40AF;font-weight:700}
+.dc{color:#7C4EDB} .bi{color:#0E7490}
+
+.callout{display:flex;gap:12px;border-radius:var(--r);padding:12px 16px;margin:12px 0}
+.cal-b{background:var(--blue-lt);border-right:3px solid var(--blue)}
+.cal-g{background:var(--green-lt);border-right:3px solid var(--green)}
+.cal-a{background:var(--amber-lt);border-right:3px solid var(--amber)}
+.cal-p{background:var(--purple-lt);border-right:3px solid var(--purple)}
+.cal-c{background:var(--coral-lt);border-right:3px solid var(--coral)}
+.cal-ico{font-size:17px;flex-shrink:0;margin-top:1px}
+.callout p{font-size:13px;color:var(--text);line-height:1.8;margin:0}
+
+.tabs{display:flex;gap:2px;border-bottom:1.5px solid var(--border);margin-bottom:16px}
+.tab-btn{padding:8px 16px;border:none;background:none;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:13px;font-weight:600;color:var(--slate);border-bottom:2px solid transparent;margin-bottom:-1.5px;transition:all .13s}
+.tab-btn:hover{color:var(--text)}
+.tab-btn.on{color:var(--blue);border-bottom-color:var(--blue)}
+.tab-pane{display:none}
+.tab-pane.on{display:block;animation:fadeUp .2s ease}
+
+.tbl{width:100%;border-collapse:collapse;font-size:12.5px;margin:10px 0}
+.tbl th{background:var(--bg);padding:8px 13px;font-weight:700;color:var(--text);text-align:right;border-bottom:1.5px solid var(--border)}
+.tbl td{padding:7px 13px;border-bottom:1px solid var(--border);color:var(--slate);vertical-align:top}
+.tbl td:first-child{font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--blue);font-weight:500}
+.tbl tr:last-child td{border:none}
+.tbl tr:hover td{background:#F8FAFF}
+
+.sandbox{background:var(--code-bg);border:1px solid var(--border);border-radius:var(--r);overflow:hidden;margin:14px 0}
+.sandbox-head{display:flex;align-items:center;justify-content:space-between;padding:8px 14px;background:#E2EBF6;border-bottom:1px solid var(--border)}
+.sandbox-title{font-size:10.5px;font-weight:700;color:var(--blue);font-family:'JetBrains Mono',monospace}
+.run-btn{display:flex;align-items:center;gap:5px;background:var(--green);color:#fff;border:none;padding:5px 13px;border-radius:6px;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:12px;font-weight:700;transition:background .12s}
+.run-btn:hover{background:#0A9060}
+textarea.editor{width:100%;background:var(--code-bg);border:none;outline:none;font-family:'JetBrains Mono',monospace;font-size:12.5px;color:var(--code-text);padding:15px;resize:vertical;min-height:100px;line-height:1.85;display:block}
+.output{padding:12px 16px;background:#0D1B2E;color:#7DCFFF;font-family:'JetBrains Mono',monospace;font-size:12px;line-height:1.75;display:none;white-space:pre;border-top:1px solid #1E3A5F}
+.output.show{display:block}
+
+/* QUIZ */
+.quiz-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--rl);overflow:hidden;margin-bottom:18px}
+.quiz-header{background:linear-gradient(135deg,#1E3A8A,#3B6FF0);padding:18px 24px;color:#fff}
+.quiz-header h3{font-size:15px;font-weight:700;margin-bottom:3px}
+.quiz-header p{font-size:12px;opacity:.8}
+.quiz-body{padding:22px}
+.quiz-q-wrap{margin-bottom:26px;padding-bottom:22px;border-bottom:1px solid var(--border)}
+.quiz-q-wrap:last-of-type{margin-bottom:0;padding-bottom:0;border:none}
+.q-num{font-size:10px;font-weight:700;color:var(--blue);text-transform:uppercase;letter-spacing:1px;margin-bottom:7px}
+.q-text{font-size:13px;font-weight:600;color:var(--text);margin-bottom:12px;line-height:1.65}
+.q-text code{background:var(--code-bg);padding:2px 7px;border-radius:5px;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:#1E40AF}
+.q-opts{display:flex;flex-direction:column;gap:7px}
+.q-opt{padding:10px 15px;border-radius:9px;cursor:pointer;border:1.5px solid var(--border);background:var(--bg);font-size:13px;color:var(--text);transition:all .12s;text-align:right;display:flex;align-items:center;gap:10px}
+.q-opt:hover:not(.locked){border-color:var(--blue);background:var(--blue-lt)}
+.q-opt .opt-letter{width:22px;height:22px;border-radius:6px;background:var(--border);color:var(--slate);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-family:'JetBrains Mono',monospace;transition:all .12s}
+.q-opt:hover:not(.locked) .opt-letter{background:var(--blue);color:#fff}
+.q-opt.correct{border-color:var(--green);background:var(--green-lt)}
+.q-opt.correct .opt-letter{background:var(--green);color:#fff}
+.q-opt.wrong{border-color:var(--coral);background:var(--coral-lt)}
+.q-opt.wrong .opt-letter{background:var(--coral);color:#fff}
+.q-opt.locked{pointer-events:none}
+.q-explain{margin-top:10px;padding:10px 14px;border-radius:8px;font-size:12.5px;line-height:1.7;display:none}
+.q-explain.show{display:block}
+.q-explain.ok{background:var(--green-lt);color:#065435;border:1px solid #86EFAC}
+.q-explain.bad{background:var(--coral-lt);color:#8B1515;border:1px solid #FCA5A5}
+.quiz-result{margin-top:18px;padding:20px;border-radius:var(--r);text-align:center;display:none;background:linear-gradient(135deg,var(--blue-lt),var(--green-lt));border:1px solid #BFDBFE}
+.quiz-result.show{display:block}
+.quiz-result .sc{font-size:38px;font-weight:700;color:var(--blue);line-height:1}
+.quiz-result .sc-lbl{font-size:11px;color:var(--slate);margin-top:3px}
+.quiz-result .msg{font-size:14px;font-weight:600;color:var(--text);margin-top:10px}
+.retry-btn{margin-top:12px;padding:8px 20px;background:var(--blue);color:#fff;border:none;border-radius:8px;cursor:pointer;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:13px;font-weight:700;transition:background .12s}
+.retry-btn:hover{background:var(--blue-dk)}
+
+.lesson-footer{display:flex;justify-content:space-between;align-items:center;padding-top:22px;margin-top:28px;border-top:1px solid var(--border)}
+.btn{padding:10px 22px;border-radius:9px;border:none;font-family:'IBM Plex Sans Arabic',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .14s}
+.btn-p{background:var(--blue);color:#fff}
+.btn-p:hover{background:var(--blue-dk);transform:translateY(-1px);box-shadow:0 4px 14px rgba(59,111,240,.28)}
+.btn-o{background:transparent;color:var(--blue);border:1.5px solid var(--blue)}
+.btn-o:hover{background:var(--blue-lt)}
+
+.chk-list{list-style:none;padding:0}
+.chk-list li{display:flex;gap:10px;align-items:flex-start;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px;color:var(--text)}
+.chk-list li:last-child{border:none}
+.chk{width:17px;height:17px;background:var(--green);border-radius:4px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.chk svg{width:9px;height:9px;stroke:#fff;stroke-width:2.5;fill:none;stroke-linecap:round;stroke-linejoin:round}
+
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.compare-col{border-radius:var(--r);padding:14px;font-size:12px;line-height:1.75}
+.compare-col h4{font-size:12px;font-weight:700;margin-bottom:8px}
+.col-bad{background:var(--coral-lt);color:#7A1515}
+.col-good{background:var(--green-lt);color:#065435}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+@media(max-width:800px){.sidebar{display:none}.ph,.content{padding:20px}.grid2{grid-template-columns:1fr}.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<aside class="sidebar">
+  <div class="sb-brand">
+    <div class="sb-brand-row">
+      <div class="sb-logo"><svg viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg></div>
+      <div><div class="sb-name">Python<small>الشرح الكامل</small></div></div>
+    </div>
+  </div>
+  <nav class="sb-nav">
+    <div class="sb-sec-label">الأساسيات</div>
+    <button class="nav-item active" data-i="0"><span class="ni-icon">🏠</span><span class="ni-label">مقدمة</span><span class="ni-badge">01</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="1"><span class="ni-icon">📦</span><span class="ni-label">المتغيرات والأنواع</span><span class="ni-badge">02</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="2"><span class="ni-icon">🔢</span><span class="ni-label">العمليات والنصوص</span><span class="ni-badge">03</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="3"><span class="ni-icon">❓</span><span class="ni-label">الشروط</span><span class="ni-badge">04</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="4"><span class="ni-icon">🔄</span><span class="ni-label">الحلقات</span><span class="ni-badge">05</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="5"><span class="ni-icon">⚙️</span><span class="ni-label">الدوال</span><span class="ni-badge">06</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <div class="sb-sec-label">هياكل البيانات</div>
+    <button class="nav-item" data-i="6"><span class="ni-icon">📋</span><span class="ni-label">Lists و Tuples</span><span class="ni-badge">07</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="7"><span class="ni-icon">📖</span><span class="ni-label">Dicts و Sets</span><span class="ni-badge">08</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <div class="sb-sec-label">متقدم</div>
+    <button class="nav-item" data-i="8"><span class="ni-icon">🧱</span><span class="ni-label">OOP والكلاسات</span><span class="ni-badge">09</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="9"><span class="ni-icon">⚠️</span><span class="ni-label">الاستثناءات والملفات</span><span class="ni-badge">10</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+    <button class="nav-item" data-i="10"><span class="ni-icon">🚀</span><span class="ni-label">مفاهيم متقدمة</span><span class="ni-badge">11</span><span class="ni-done"><svg viewBox="0 0 10 10"><polyline points="1.5,5 4,7.5 8.5,2.5"/></svg></span></button>
+  </nav>
+  <div class="sb-footer">
+    <div class="sb-prog-lbl"><span>التقدم</span><b id="pct">0%</b></div>
+    <div class="prog-track"><div class="prog-bar" id="pgbar" style="width:0%"></div></div>
+  </div>
+</aside>
+<div class="main">
+<!-- LESSON 0 -->
+<div class="lesson active" id="L0">
+<div class="ph"><div class="ph-eye">البداية</div><div class="ph-title">مرحباً بك في Python 🐍</div><div class="ph-desc">Python من أسهل لغات البرمجة وأكثرها استخداماً. الشرح ده هيوديك من الصفر لحد ما تكتب أي كود بثقة — وبعد كل درس فيه اختبار حقيقي.</div><div class="ph-tags"><span class="tag tag-b">Python 3.x</span><span class="tag tag-g">من الصفر</span><span class="tag tag-a">اختبار بعد كل درس</span></div></div>
+<div class="content">
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">⚡</div><div class="card-title">ليه Python؟</div></div><p>Python لغة واضحة وسهلة القراءة. مقارنةً بـ Java مثلاً — نفس الحاجة بأقل كود بكتير.</p>
+<div class="compare"><div class="compare-col col-bad"><h4>Java</h4><code style="font-family:'JetBrains Mono',monospace;font-size:11px">public class Main {<br>&nbsp;&nbsp;public static void main(String[] a){<br>&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Hi!");<br>&nbsp;&nbsp;}}</code></div><div class="compare-col col-good"><h4>Python ✓</h4><code style="font-family:'JetBrains Mono',monospace;font-size:12px">print("Hi!")</code></div></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🗺️</div><div class="card-title">هتتعلم إيه؟</div></div><ul class="chk-list"><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>المتغيرات وأنواع البيانات</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>العمليات والنصوص وf-Strings</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>الشروط والحلقات</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>الدوال وLambda</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>Lists, Tuples, Dicts, Sets</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>OOP — Classes والوراثة</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>Exceptions والملفات</li><li><span class="chk"><svg viewBox="0 0 12 12"><polyline points="2,6 5,9 10,3"/></svg></span>Decorators وGenerators</li></ul></div>
+</div>
+<div class="callout cal-b"><span class="cal-ico">🎯</span><p><strong>طريقة الشرح:</strong> كل درس = شرح معمّق + أمثلة حقيقية + اختبار من 5 أسئلة. لو عملت الاختبار وجاوبت كل حاجة صح، الدرس بيتعلّم ✓ وبيظهر في الـ progress.</p></div>
+<div class="lesson-footer"><div></div><button class="btn btn-p" onclick="go(1)">ابدأ التعلم ←</button></div>
+</div></div>
+
+<!-- LESSON 1: المتغيرات -->
+<div class="lesson" id="L1">
+<div class="ph"><div class="ph-eye">الدرس الأول</div><div class="ph-title">المتغيرات وأنواع البيانات</div><div class="ph-desc">المتغير = صندوق في الذاكرة له اسم وقيمة. Python بتحدد النوع تلقائياً من القيمة نفسها.</div><div class="ph-tags"><span class="tag tag-b">str</span><span class="tag tag-g">int</span><span class="tag tag-a">float</span><span class="tag tag-p">bool</span><span class="tag tag-c">None</span></div></div>
+<div class="content">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">📦</div><div class="card-title">الأنواع الخمسة الأساسية</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="cm"># ① str — نص، بأقواس مزدوجة أو مفردة</span>
+name    = <span class="st">"Ahmed"</span>
+city    = <span class="st">'Cairo'</span>
+bio     = <span class="st">"""نص
+متعدد الأسطر"""</span>
+
+<span class="cm"># ② int — رقم صحيح</span>
+age     = <span class="nm">25</span>
+score   = <span class="nm">-10</span>           <span class="cm"># ممكن سالب</span>
+million = <span class="nm">1_000_000</span>    <span class="cm"># _ للوضوح</span>
+
+<span class="cm"># ③ float — رقم عشري</span>
+pi    = <span class="nm">3.14159</span>
+price = <span class="nm">99.99</span>
+sci   = <span class="nm">1.5e3</span>          <span class="cm"># = 1500.0</span>
+
+<span class="cm"># ④ bool — صح أو غلط</span>
+is_admin   = <span class="kw">True</span>
+is_deleted = <span class="kw">False</span>
+
+<span class="cm"># ⑤ None — غياب القيمة (زي null)</span>
+result = <span class="kw">None</span>
+
+<span class="cm"># تعيين متعدد</span>
+x = y = z = <span class="nm">0</span>
+a, b, c = <span class="nm">1</span>, <span class="nm">2</span>, <span class="nm">3</span>
+
+<span class="cm"># عرض النوع</span>
+<span class="fn">print</span>(<span class="fn">type</span>(name))    <span class="cm"># &lt;class 'str'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(age))     <span class="cm"># &lt;class 'int'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(pi))      <span class="cm"># &lt;class 'float'&gt;</span>
+<span class="fn">print</span>(<span class="fn">type</span>(is_admin)) <span class="cm"># &lt;class 'bool'&gt;</span></pre></div></div>
+
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🔀</div><div class="card-title">تحويل الأنواع</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="fn">int</span>(<span class="st">"25"</span>)      <span class="cm"># → 25</span>
+<span class="fn">float</span>(<span class="st">"3.14"</span>) <span class="cm"># → 3.14</span>
+<span class="fn">str</span>(<span class="nm">42</span>)        <span class="cm"># → "42"</span>
+<span class="fn">bool</span>(<span class="nm">0</span>)        <span class="cm"># → False</span>
+<span class="fn">bool</span>(<span class="st">""</span>)       <span class="cm"># → False (فاضي)</span>
+<span class="fn">bool</span>(<span class="st">"hi"</span>)    <span class="cm"># → True</span>
+<span class="fn">bool</span>(<span class="kw">None</span>)    <span class="cm"># → False</span>
+<span class="fn">bool</span>([])       <span class="cm"># → False (قائمة فاضية)</span></pre></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-a">📏</div><div class="card-title">قواعد التسمية</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="cm"># ✅ صح — snake_case</span>
+user_name   = <span class="st">"Ali"</span>
+total_price = <span class="nm">100</span>
+_private    = <span class="kw">True</span>
+count2      = <span class="nm">5</span>
+
+<span class="cm"># ❌ غلط</span>
+<span class="cm"># 2count   تبدأ برقم</span>
+<span class="cm"># my-name  تحتوي -</span>
+<span class="cm"># for = 1  keyword محجوز</span></pre></div></div>
+</div>
+
+<div class="card"><div class="card-head"><div class="card-ico ico-p">🧪</div><div class="card-title">جرّب بنفسك</div></div>
+<div class="sandbox"><div class="sandbox-head"><span class="sandbox-title">محاكي Python</span><button class="run-btn" onclick="runCode('e1','o1')">▶ شغّل</button></div>
+<textarea class="editor" id="e1">name = "Ahmed"
+age = 25
+height = 1.75
+is_student = True
+
+print(f"الاسم: {name}")
+print(f"العمر: {age}")
+print(f"الطول: {height}")
+print(f"طالب: {is_student}")
+print(type(age))</textarea>
+<div class="output" id="o1"></div></div></div>
+
+<div class="callout cal-a"><span class="cal-ico">⚠️</span><p><strong>تحذير شائع:</strong> لو جمعت str + int هيطلع TypeError. لازم تحول أولاً: <code style="font-family:monospace">str(25) + " سنة"</code></p></div>
+
+<!-- QUIZ 1 -->
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — المتغيرات والأنواع</h3><p>5 أسئلة — أجب على كلهم وشوف نتيجتك</p></div>
+<div class="quiz-body" data-qid="1">
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه نوع المتغير ده؟ <code>x = "3.14"</code></div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>float</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>str — لأنه بين أقواس</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>int</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>bool</div></div><div class="q-explain ok">✅ صح! الأقواس "" بتخلي أي حاجة جوها str حتى لو رقم.</div><div class="q-explain bad">❌ غلط! الأقواس "" = str دايماً. الإجابة: str</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه نتيجة <code>bool("")</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>False</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>True</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>None</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>Error</div></div><div class="q-explain ok">✅ صح! النص الفاضي = False. أي نص فيه حرف = True.</div><div class="q-explain bad">❌ غلط! النص الفاضي "" = False في Python.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 3 من 5</div><div class="q-text">إيه الاسم الصح لمتغير في Python؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span><code>2fast = True</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span><code>my-speed = 100</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span><code>my_speed = 100</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span><code>class = "A"</code></div></div><div class="q-explain ok">✅ صح! snake_case مع underscore هو الأسلوب الصح.</div><div class="q-explain bad">❌ غلط! my_speed صح. لا يبدأ برقم، لا يحتوي -، لا يستخدم keywords.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه نتيجة <code>type(3.0)</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span><code>&lt;class 'int'&gt;</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span><code>&lt;class 'str'&gt;</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span><code>&lt;class 'double'&gt;</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span><code>&lt;class 'float'&gt;</code></div></div><div class="q-explain ok">✅ صح! 3.0 فيها نقطة عشرية = float حتى لو قيمتها صحيحة.</div><div class="q-explain bad">❌ غلط! 3.0 = float. Python مش بتستخدم "double".</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">إيه اللي بيحصل لو كتبت <code>x = y = z = 0</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>Error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>الثلاثة بياخدوا قيمة 0</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>بس z بياخد 0</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>بس x بياخد 0</div></div><div class="q-explain ok">✅ صح! Python بتسمح بالتعيين المتسلسل.</div><div class="q-explain bad">❌ غلط! x = y = z = 0 صح وبيديهم كلهم 0.</div></div>
+<div class="quiz-result" id="qr1"><div class="sc" id="qs1">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm1"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(0)">→ السابق</button><button class="btn btn-p" onclick="go(2)">التالي ←</button></div>
+</div></div>
+<!-- LESSON 2: العمليات والنصوص -->
+<div class="lesson" id="L2">
+<div class="ph"><div class="ph-eye">الدرس الثاني</div><div class="ph-title">العمليات الحسابية والنصوص</div><div class="ph-desc">Python بتدعم كل العمليات الحسابية وعندها أدوات قوية جداً للـ strings.</div><div class="ph-tags"><span class="tag tag-b">الحساب</span><span class="tag tag-g">Strings</span><span class="tag tag-a">f-Strings</span></div></div>
+<div class="content">
+<div class="tabs"><button class="tab-btn on" onclick="tab(this,'t2a')">العمليات</button><button class="tab-btn" onclick="tab(this,'t2b')">Strings</button><button class="tab-btn" onclick="tab(this,'t2c')">f-Strings</button></div>
+<div class="tab-pane on" id="t2a">
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">🔢</div><div class="card-title">العمليات الأساسية</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>a, b = <span class="nm">17</span>, <span class="nm">5</span>
+a + b    <span class="cm"># 22  جمع</span>
+a - b    <span class="cm"># 12  طرح</span>
+a * b    <span class="cm"># 85  ضرب</span>
+a / b    <span class="cm"># 3.4 قسمة (دايماً float)</span>
+a // b   <span class="cm"># 3   قسمة صحيحة</span>
+a % b    <span class="cm"># 2   باقي القسمة</span>
+a ** b   <span class="cm"># 1419857  أس</span>
+<span class="fn">abs</span>(-<span class="nm">5</span>) <span class="cm"># 5   قيمة مطلقة</span>
+<span class="fn">round</span>(<span class="nm">3.7</span>) <span class="cm"># 4  تقريب</span></pre></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">⚡</div><div class="card-title">اختصارات التعيين</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>x = <span class="nm">10</span>
+x += <span class="nm">5</span>   <span class="cm"># x = 15</span>
+x -= <span class="nm">3</span>   <span class="cm"># x = 12</span>
+x *= <span class="nm">2</span>   <span class="cm"># x = 24</span>
+x /= <span class="nm">6</span>   <span class="cm"># x = 4.0</span>
+x //= <span class="nm">1</span>  <span class="cm"># x = 4</span>
+x **= <span class="nm">2</span>  <span class="cm"># x = 16</span>
+x %= <span class="nm">7</span>   <span class="cm"># x = 2</span></pre></div></div>
+</div></div>
+<div class="tab-pane" id="t2b">
+<div class="card"><div class="card-head"><div class="card-ico ico-p">📝</div><div class="card-title">عمليات الـ Strings</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>s = <span class="st">"Hello Python World"</span>
+
+<span class="fn">len</span>(s)                      <span class="cm"># 18</span>
+s[<span class="nm">0</span>]                        <span class="cm"># "H"</span>
+s[-<span class="nm">1</span>]                       <span class="cm"># "d"</span>
+s[<span class="nm">0</span>:<span class="nm">5</span>]                      <span class="cm"># "Hello"</span>
+s[::<span class="nm">-1</span>]                     <span class="cm"># عكس النص</span>
+s.<span class="fn">upper</span>()                   <span class="cm"># "HELLO PYTHON WORLD"</span>
+s.<span class="fn">lower</span>()                   <span class="cm"># "hello python world"</span>
+s.<span class="fn">replace</span>(<span class="st">"Python"</span>,<span class="st">"Java"</span>) <span class="cm"># "Hello Java World"</span>
+s.<span class="fn">split</span>(<span class="st">" "</span>)               <span class="cm"># ["Hello","Python","World"]</span>
+s.<span class="fn">strip</span>()                   <span class="cm"># إزالة مسافات الطرفين</span>
+s.<span class="fn">startswith</span>(<span class="st">"Hello"</span>)     <span class="cm"># True</span>
+s.<span class="fn">count</span>(<span class="st">"l"</span>)               <span class="cm"># 3</span>
+s.<span class="fn">find</span>(<span class="st">"Python"</span>)           <span class="cm"># 6 (index)</span>
+<span class="st">" "</span>.<span class="fn">join</span>([<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"c"</span>])    <span class="cm"># "a b c"</span></pre></div></div></div>
+<div class="tab-pane" id="t2c">
+<div class="card"><div class="card-head"><div class="card-ico ico-a">✨</div><div class="card-title">f-Strings — الطريقة الحديثة</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>name  = <span class="st">"Ahmed"</span>
+age   = <span class="nm">25</span>
+score = <span class="nm">87.456</span>
+
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"اسمي {name} وعمري {age}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"السنة الجاية: {age + 1}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"كبير: {name.upper()}"</span>)
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"الدرجة: {score:.2f}"</span>)    <span class="cm"># 87.46</span>
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"المليون: {1_000_000:,}"</span>)  <span class="cm"># 1,000,000</span>
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"النسبة: {0.85:.1%}"</span>)      <span class="cm"># 85.0%</span>
+<span class="fn">print</span>(<span class="fn">f</span><span class="st">"{'كبير' if age>=18 else 'صغير'}"</span>)</pre></div></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — العمليات والنصوص</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="2">
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه نتيجة <code>17 % 5</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>3</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>3.4</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>2</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>85</div></div><div class="q-explain ok">✅ صح! % = باقي القسمة. 17÷5=3 والباقي 2.</div><div class="q-explain bad">❌ غلط! % = باقي القسمة. 17÷5=3 والباقي 2.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه نتيجة <code>"Python"[1:4]</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>"Pyt"</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>"yth"</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>"ytho"</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>"thon"</div></div><div class="q-explain ok">✅ صح! [1:4] = index 1,2,3. P=0,y=1,t=2,h=3 → "yth"</div><div class="q-explain bad">❌ غلط! [1:4] = index 1 لـ 3. P=0,y=1,t=2,h=3 → "yth"</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 3 من 5</div><div class="q-text">إيه الفرق بين <code>/</code> و <code>//</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>/ بترجع float دايماً، // بترجع الجزء الصحيح</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>// أسرع</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>// بترجع float</div></div><div class="q-explain ok">✅ صح! 10/3=3.333، أما 10//3=3 (الجزء الصحيح).</div><div class="q-explain bad">❌ غلط! / دايماً float. // = floor division بترجع int.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه نتيجة <code>f"{'hello'.upper()}"</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>Error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>"hello"</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>"Hello"</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>"HELLO"</div></div><div class="q-explain ok">✅ صح! جوا {} في f-string ممكن تكتب أي expression.</div><div class="q-explain bad">❌ غلط! f-string بتنفذ الـ expression جوا {} → "HELLO".</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">إيه نتيجة <code>"hello".split("l")</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>["he", "o"]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>["he", "", "o"]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>["h","e","l","l","o"]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>Error</div></div><div class="q-explain ok">✅ صح! بين الـ l الأولى والثانية نص فاضي "" → ["he","","o"]</div><div class="q-explain bad">❌ غلط! split("l"): "he" + l + "" + l + "o" → ["he","","o"]</div></div>
+<div class="quiz-result" id="qr2"><div class="sc" id="qs2">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm2"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(1)">→ السابق</button><button class="btn btn-p" onclick="go(3)">التالي ←</button></div>
+</div></div>
+
+<!-- LESSON 3: الشروط -->
+<div class="lesson" id="L3">
+<div class="ph"><div class="ph-eye">الدرس الثالث</div><div class="ph-title">الشروط — if / elif / else</div><div class="ph-desc">بتتحكم في تدفق البرنامج وتاخد قرارات بناءً على الشروط.</div><div class="ph-tags"><span class="tag tag-b">if</span><span class="tag tag-g">elif</span><span class="tag tag-a">else</span><span class="tag tag-p">Ternary</span></div></div>
+<div class="content">
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">❓</div><div class="card-title">if / elif / else</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>score = <span class="nm">78</span>
+
+<span class="kw">if</span> score >= <span class="nm">90</span>:
+    grade = <span class="st">"A — ممتاز"</span>
+<span class="kw">elif</span> score >= <span class="nm">80</span>:
+    grade = <span class="st">"B — جيد جداً"</span>
+<span class="kw">elif</span> score >= <span class="nm">70</span>:
+    grade = <span class="st">"C — جيد"</span>
+<span class="kw">else</span>:
+    grade = <span class="st">"F — راسب"</span>
+
+<span class="fn">print</span>(grade)  <span class="cm"># C — جيد</span></pre></div>
+<div class="callout cal-b"><span class="cal-ico">📌</span><p>Python بتستخدم <strong>الـ Indentation</strong> للـ blocks — مش أقواس {} زي لغات تانية.</p></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🔗</div><div class="card-title">المقارنة والمنطق</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>x = <span class="nm">5</span>
+x == <span class="nm">5</span>   <span class="cm"># True  يساوي</span>
+x != <span class="nm">3</span>   <span class="cm"># True  لا يساوي</span>
+x > <span class="nm">3</span>    <span class="cm"># True  أكبر</span>
+x < <span class="nm">10</span>   <span class="cm"># True  أصغر</span>
+x >= <span class="nm">5</span>   <span class="cm"># True  أكبر أو يساوي</span>
+x <= <span class="nm">5</span>   <span class="cm"># True  أصغر أو يساوي</span>
+
+<span class="kw">True</span> <span class="kw">and</span> <span class="kw">True</span>  <span class="cm"># True</span>
+<span class="kw">True</span> <span class="kw">or</span>  <span class="kw">False</span> <span class="cm"># True</span>
+<span class="kw">not</span> <span class="kw">True</span>       <span class="cm"># False</span></pre></div></div>
+</div>
+<div class="card"><div class="card-head"><div class="card-ico ico-p">⚡</div><div class="card-title">Ternary + match (3.10+)</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="cm"># Ternary — شرط في سطر</span>
+status = <span class="st">"كبير"</span> <span class="kw">if</span> age >= <span class="nm">18</span> <span class="kw">else</span> <span class="st">"صغير"</span>
+
+<span class="cm"># match — Python 3.10+</span>
+cmd = <span class="st">"start"</span>
+<span class="kw">match</span> cmd:
+    <span class="kw">case</span> <span class="st">"start"</span>: <span class="fn">print</span>(<span class="st">"بدأنا!"</span>)
+    <span class="kw">case</span> <span class="st">"stop"</span>:  <span class="fn">print</span>(<span class="st">"وقفنا!"</span>)
+    <span class="kw">case</span> _:        <span class="fn">print</span>(<span class="st">"مجهول"</span>)</pre></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — الشروط</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="3">
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه اللي بيطبعه؟ <code>print("A") if 5 > 3 else print("B")</code></div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>B</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>A</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>AB</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>Error</div></div><div class="q-explain ok">✅ صح! 5 > 3 = True فبيطبع "A".</div><div class="q-explain bad">❌ غلط! 5 > 3 = True → "A".</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه نتيجة <code>True and False or True</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>False</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>Error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>True</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>None</div></div><div class="q-explain ok">✅ صح! and قبل or: (True and False)=False، ثم False or True=True.</div><div class="q-explain bad">❌ غلط! أولوية and قبل or: (T and F)=F، ثم F or T=True.</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 3 من 5</div><div class="q-text">ليه Python بتستخدم Indentation؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>لتحديد الـ blocks — جزء أساسي من الـ syntax</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>للجمال بس</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>اختياري</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>يزيد السرعة</div></div><div class="q-explain ok">✅ صح! Indentation في Python إجباري — لو شيلته هيحصل IndentationError.</div><div class="q-explain bad">❌ غلط! Indentation إجباري في Python — ده جزء من الـ syntax.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه نتيجة <code>not (5 > 3)</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>5</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>3</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>True</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>False</div></div><div class="q-explain ok">✅ صح! 5>3=True، وnot True=False.</div><div class="q-explain bad">❌ غلط! 5>3=True، not True=False.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">صيغة الـ Ternary الصح في Python؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span><code>if x>0: "موجب" else "سالب"</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span><code>"موجب" if x>0 else "سالب"</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span><code>x>0 ? "موجب" : "سالب"</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span><code>(x>0) → "موجب"</code></div></div><div class="q-explain ok">✅ صح! الصيغة: value_if_true if condition else value_if_false</div><div class="q-explain bad">❌ غلط! Python Ternary: value_if_true if condition else value_if_false</div></div>
+<div class="quiz-result" id="qr3"><div class="sc" id="qs3">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm3"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(2)">→ السابق</button><button class="btn btn-p" onclick="go(4)">التالي ←</button></div>
+</div></div>
+<!-- LESSON 4: الحلقات -->
+<div class="lesson" id="L4">
+<div class="ph"><div class="ph-eye">الدرس الرابع</div><div class="ph-title">الحلقات — for و while</div><div class="ph-desc">بتكرر تنفيذ الكود بدون ما تكتبه مرات. for للتكرار على مجموعة، while للتكرار بشرط.</div><div class="ph-tags"><span class="tag tag-b">for</span><span class="tag tag-g">while</span><span class="tag tag-a">break/continue</span><span class="tag tag-p">comprehension</span></div></div>
+<div class="content">
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">🔄</div><div class="card-title">for Loop</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>fruits = [<span class="st">"Apple"</span>, <span class="st">"Banana"</span>, <span class="st">"Mango"</span>]
+<span class="kw">for</span> f <span class="kw">in</span> fruits:
+    <span class="fn">print</span>(f)
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):      <span class="cm"># 0,1,2,3,4</span>
+    <span class="fn">print</span>(i)
+
+<span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>,<span class="nm">11</span>,<span class="nm">2</span>): <span class="cm"># 1,3,5,7,9</span>
+    <span class="fn">print</span>(i)
+
+<span class="cm"># enumerate — مع index</span>
+<span class="kw">for</span> i, f <span class="kw">in</span> <span class="fn">enumerate</span>(fruits, <span class="nm">1</span>):
+    <span class="fn">print</span>(<span class="fn">f</span><span class="st">"{i}. {f}"</span>)
+
+<span class="cm"># zip — دمج قائمتين</span>
+names  = [<span class="st">"Ali"</span>, <span class="st">"Sara"</span>]
+scores = [<span class="nm">85</span>, <span class="nm">92</span>]
+<span class="kw">for</span> n, s <span class="kw">in</span> <span class="fn">zip</span>(names, scores):
+    <span class="fn">print</span>(<span class="fn">f</span><span class="st">"{n}: {s}"</span>)</pre></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🔁</div><div class="card-title">while + break + continue</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>count = <span class="nm">0</span>
+<span class="kw">while</span> count < <span class="nm">5</span>:
+    <span class="fn">print</span>(count)
+    count += <span class="nm">1</span>
+
+<span class="cm"># break — وقّف</span>
+<span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">10</span>):
+    <span class="kw">if</span> n == <span class="nm">5</span>: <span class="kw">break</span>
+    <span class="fn">print</span>(n)  <span class="cm"># 0,1,2,3,4</span>
+
+<span class="cm"># continue — تخطّى</span>
+<span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):
+    <span class="kw">if</span> n == <span class="nm">2</span>: <span class="kw">continue</span>
+    <span class="fn">print</span>(n)  <span class="cm"># 0,1,3,4</span>
+
+<span class="cm"># for...else</span>
+<span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">5</span>):
+    <span class="fn">print</span>(n)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"خلصت بدون break!"</span>)</pre></div></div>
+</div>
+<div class="card"><div class="card-head"><div class="card-ico ico-a">⚡</div><div class="card-title">List Comprehension</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>nums = [<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>,<span class="nm">7</span>,<span class="nm">8</span>]
+
+squares = [n**<span class="nm">2</span> <span class="kw">for</span> n <span class="kw">in</span> nums]
+evens   = [n <span class="kw">for</span> n <span class="kw">in</span> nums <span class="kw">if</span> n%<span class="nm">2</span>==<span class="nm">0</span>]
+labels  = [<span class="st">"زوجي"</span> <span class="kw">if</span> n%<span class="nm">2</span>==<span class="nm">0</span> <span class="kw">else</span> <span class="st">"فردي"</span> <span class="kw">for</span> n <span class="kw">in</span> nums]
+
+<span class="cm"># nested — 2D matrix</span>
+matrix = [[i*j <span class="kw">for</span> j <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>,<span class="nm">4</span>)] <span class="kw">for</span> i <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>,<span class="nm">4</span>)]
+<span class="cm"># [[1,2,3],[2,4,6],[3,6,9]]</span></pre></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — الحلقات</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="4">
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه اللي بيولده <code>range(2, 10, 3)</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>2,3,4,5,6,7,8,9</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>2,4,6,8</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>2,5,8</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>3,6,9</div></div><div class="q-explain ok">✅ صح! range(start,stop,step): من 2 بخطوة 3: 2,5,8.</div><div class="q-explain bad">❌ غلط! range(2,10,3) = من 2 لـ9 بخطوة 3: 2,5,8.</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه الفرق بين <code>break</code> و <code>continue</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>break يوقف الحلقة كلها، continue يتخطى الـ iteration الحالية</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>continue يوقف، break يكمّل</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>break للـ for فقط</div></div><div class="q-explain ok">✅ صح! break = وقّف كل الحلقة. continue = تخطّى الـ iteration دي وكمّل.</div><div class="q-explain bad">❌ غلط! break = يوقف الحلقة نهائياً. continue = يتخطى ويكمل.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 3 من 5</div><div class="q-text">إيه نتيجة <code>[x*2 for x in range(4) if x > 1]</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>[0,2,4,6]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>[2,4]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>[4,6,8]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>[4,6]</div></div><div class="q-explain ok">✅ صح! range(4)=0,1,2,3. فلتر x>1: 2,3. ضربهم في 2: [4,6].</div><div class="q-explain bad">❌ غلط! range(4)=0,1,2,3. بعد x>1: 2,3. ×2: [4,6].</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 4 من 5</div><div class="q-text">متى بيتنفذ الـ <code>else</code> في for...else؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>دايماً</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بس لو الحلقة خلصت بدون break</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>لو حصل break</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>لو الـ list فاضية</div></div><div class="q-explain ok">✅ صح! else بيتنفذ بس لو الحلقة انتهت طبيعياً بدون break.</div><div class="q-explain bad">❌ غلط! else = انتهت بدون break.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 5 من 5</div><div class="q-text">إيه وظيفة <code>enumerate()</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>بتعمل list من range</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بتدمج قائمتين</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>بتضيف counter لكل عنصر في الـ loop</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>بتعكس القائمة</div></div><div class="q-explain ok">✅ صح! enumerate بترجع (index, value). zip بيدمج قائمتين.</div><div class="q-explain bad">❌ غلط! enumerate بتضيف index لكل عنصر: for i,v in enumerate(list).</div></div>
+<div class="quiz-result" id="qr4"><div class="sc" id="qs4">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm4"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(3)">→ السابق</button><button class="btn btn-p" onclick="go(5)">التالي ←</button></div>
+</div></div>
+
+<!-- LESSON 5: الدوال -->
+<div class="lesson" id="L5">
+<div class="ph"><div class="ph-eye">الدرس الخامس</div><div class="ph-title">الدوال — Functions</div><div class="ph-desc">بلوكات كود قابلة للإعادة — اكتبها مرة واستخدمها في أي مكان.</div><div class="ph-tags"><span class="tag tag-b">def</span><span class="tag tag-g">return</span><span class="tag tag-a">*args</span><span class="tag tag-p">**kwargs</span></div></div>
+<div class="content">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">⚙️</div><div class="card-title">تعريف الدوال بالتفصيل</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">def</span> <span class="fn">greet</span>(name):
+    <span class="kw">return</span> <span class="fn">f</span><span class="st">"مرحباً يا {name}!"</span>
+
+<span class="cm"># قيم افتراضية</span>
+<span class="kw">def</span> <span class="fn">power</span>(base, exp=<span class="nm">2</span>):
+    <span class="kw">return</span> base ** exp
+
+<span class="fn">power</span>(<span class="nm">4</span>)       <span class="cm"># 16</span>
+<span class="fn">power</span>(<span class="nm">2</span>, <span class="nm">8</span>)    <span class="cm"># 256</span>
+<span class="fn">power</span>(exp=<span class="nm">3</span>, base=<span class="nm">5</span>)  <span class="cm"># 125</span>
+
+<span class="cm"># *args → tuple</span>
+<span class="kw">def</span> <span class="fn">total</span>(*nums):
+    <span class="kw">return</span> <span class="fn">sum</span>(nums)
+
+<span class="fn">total</span>(<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>)      <span class="cm"># 6</span>
+<span class="fn">total</span>(<span class="nm">10</span>,<span class="nm">20</span>,<span class="nm">30</span>)   <span class="cm"># 60</span>
+
+<span class="cm"># **kwargs → dict</span>
+<span class="kw">def</span> <span class="fn">info</span>(**data):
+    <span class="kw">for</span> k, v <span class="kw">in</span> data.<span class="fn">items</span>():
+        <span class="fn">print</span>(<span class="fn">f</span><span class="st">"{k}: {v}"</span>)
+
+<span class="fn">info</span>(name=<span class="st">"Ali"</span>, age=<span class="nm">25</span>)
+
+<span class="cm"># إرجاع أكثر من قيمة</span>
+<span class="kw">def</span> <span class="fn">min_max</span>(lst):
+    <span class="kw">return</span> <span class="fn">min</span>(lst), <span class="fn">max</span>(lst)
+
+low, high = <span class="fn">min_max</span>([<span class="nm">3</span>,<span class="nm">1</span>,<span class="nm">7</span>,<span class="nm">2</span>])  <span class="cm"># 1, 7</span></pre></div></div>
+
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-p">🔮</div><div class="card-title">Lambda + map + filter</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>sq  = <span class="kw">lambda</span> x: x**<span class="nm">2</span>
+add = <span class="kw">lambda</span> a,b: a+b
+
+nums = [<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>]
+
+doubled = <span class="fn">list</span>(<span class="fn">map</span>(<span class="kw">lambda</span> x:x*<span class="nm">2</span>, nums))
+<span class="cm"># [2,4,6,8,10]</span>
+
+evens   = <span class="fn">list</span>(<span class="fn">filter</span>(<span class="kw">lambda</span> x:x%<span class="nm">2</span>==<span class="nm">0</span>, nums))
+<span class="cm"># [2,4]</span>
+
+words = [<span class="st">"banana"</span>,<span class="st">"apple"</span>,<span class="st">"kiwi"</span>]
+<span class="fn">sorted</span>(words, key=<span class="kw">lambda</span> w:<span class="fn">len</span>(w))
+<span class="cm"># ["kiwi","apple","banana"]</span></pre></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">📐</div><div class="card-title">Type Hints</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">def</span> <span class="fn">greet</span>(name: <span class="bi">str</span>) -> <span class="bi">str</span>:
+    <span class="kw">return</span> <span class="fn">f</span><span class="st">"مرحباً {name}"</span>
+
+<span class="kw">def</span> <span class="fn">add</span>(a: <span class="bi">int</span>, b: <span class="bi">int</span>) -> <span class="bi">int</span>:
+    <span class="kw">return</span> a + b
+
+<span class="kw">def</span> <span class="fn">find</span>(x: <span class="bi">int</span>) -> <span class="bi">int</span> | <span class="kw">None</span>:
+    <span class="kw">return</span> x <span class="kw">if</span> x > <span class="nm">0</span> <span class="kw">else</span> <span class="kw">None</span></pre></div></div>
+</div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — الدوال</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="5">
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه نوع <code>args</code> جوا الدالة لما بتستخدم <code>*args</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>list</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>tuple</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>dict</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>set</div></div><div class="q-explain ok">✅ صح! *args بتجمع الـ arguments في tuple مش list.</div><div class="q-explain bad">❌ غلط! *args = tuple.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه نتيجة <code>(lambda x,y: x*y)(3,4)</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>7</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>Error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>"34"</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>12</div></div><div class="q-explain ok">✅ صح! Lambda(3,4) = 3*4 = 12.</div><div class="q-explain bad">❌ غلط! Lambda(3,4) = x*y = 3*4 = 12.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 3 من 5</div><div class="q-text">دالة <code>def f(a, b=10)</code> — إيه اللي بيحصل لو كتبت <code>f(5)</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>Error لأن b مش متحدد</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>a=10, b=5</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>a=5, b=10</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>a=5, b=None</div></div><div class="q-explain ok">✅ صح! b=10 قيمة افتراضية — لو مش حددتها بتاخد الافتراضية.</div><div class="q-explain bad">❌ غلط! f(5) → a=5, b=10 (الافتراضي).</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه نتيجة <code>list(map(lambda x: x**2, [1,2,3]))</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>[1,4,9]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>[2,4,6]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>[1,2,3]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>36</div></div><div class="q-explain ok">✅ صح! map(x²) على [1,2,3]: 1,4,9.</div><div class="q-explain bad">❌ غلط! map(x²): 1²=1, 2²=4, 3²=9 → [1,4,9].</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">إيه نوع <code>kwargs</code> جوا الدالة لما بتستخدم <code>**kwargs</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>tuple</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>dict</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>list</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>set</div></div><div class="q-explain ok">✅ صح! **kwargs = dict.</div><div class="q-explain bad">❌ غلط! **kwargs بتجمع keyword arguments في dict.</div></div>
+<div class="quiz-result" id="qr5"><div class="sc" id="qs5">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm5"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(4)">→ السابق</button><button class="btn btn-p" onclick="go(6)">التالي ←</button></div>
+</div></div>
+<!-- LESSON 6: Lists و Tuples -->
+<div class="lesson" id="L6">
+<div class="ph"><div class="ph-eye">الدرس السادس</div><div class="ph-title">Lists و Tuples</div><div class="ph-desc">List مجموعة مرتبة قابلة للتعديل. Tuple مجموعة ثابتة مش ممكن تتغير.</div><div class="ph-tags"><span class="tag tag-b">list</span><span class="tag tag-g">tuple</span><span class="tag tag-a">slicing</span><span class="tag tag-p">unpacking</span></div></div>
+<div class="content">
+<div class="tabs"><button class="tab-btn on" onclick="tab(this,'t6a')">List</button><button class="tab-btn" onclick="tab(this,'t6b')">Tuple</button><button class="tab-btn" onclick="tab(this,'t6c')">دوال مدمجة</button></div>
+<div class="tab-pane on" id="t6a">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">📋</div><div class="card-title">كل عمليات List</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>lst = [<span class="nm">10</span>,<span class="nm">20</span>,<span class="nm">30</span>,<span class="nm">40</span>,<span class="nm">50</span>]
+
+lst[<span class="nm">0</span>]        <span class="cm"># 10</span>
+lst[-<span class="nm">1</span>]       <span class="cm"># 50</span>
+lst[<span class="nm">1</span>:<span class="nm">4</span>]      <span class="cm"># [20,30,40]</span>
+lst[::<span class="nm">-1</span>]     <span class="cm"># عكس</span>
+
+lst.<span class="fn">append</span>(<span class="nm">60</span>)      <span class="cm"># إضافة بالآخر</span>
+lst.<span class="fn">insert</span>(<span class="nm">0</span>,<span class="nm">5</span>)    <span class="cm"># إضافة في index</span>
+lst.<span class="fn">extend</span>([<span class="nm">70</span>,<span class="nm">80</span>]) <span class="cm"># ضم list</span>
+
+lst.<span class="fn">remove</span>(<span class="nm">30</span>) <span class="cm"># يحذف أول 30</span>
+lst.<span class="fn">pop</span>()      <span class="cm"># يحذف الأخير ويرجعه</span>
+<span class="kw">del</span> lst[<span class="nm">1</span>:<span class="nm">3</span>]  <span class="cm"># حذف slice</span>
+
+lst.<span class="fn">index</span>(<span class="nm">20</span>)  <span class="cm"># أول index لـ20</span>
+lst.<span class="fn">sort</span>()         <span class="cm"># ترتيب تصاعدي</span>
+lst.<span class="fn">sort</span>(reverse=<span class="kw">True</span>) <span class="cm"># تنازلي</span>
+lst.<span class="fn">reverse</span>()      <span class="cm"># عكس</span>
+
+copy1 = lst.<span class="fn">copy</span>()
+copy2 = lst[:]</pre></div></div></div>
+<div class="tab-pane" id="t6b">
+<div class="card"><div class="card-head"><div class="card-ico ico-p">🔒</div><div class="card-title">Tuple — ثابتة وسريعة</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>point  = (<span class="nm">10</span>, <span class="nm">20</span>)
+single = (<span class="nm">42</span>,)    <span class="cm"># لازم فاصلة!</span>
+
+<span class="cm"># Unpacking</span>
+x, y = point
+first, *rest = [<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>]  <span class="cm"># first=1, rest=[2,3,4,5]</span>
+
+<span class="cm"># swap بدون متغير مؤقت</span>
+a, b = <span class="nm">10</span>, <span class="nm">20</span>
+a, b = b, a   <span class="cm"># a=20, b=10</span>
+
+<span class="cm"># point[0] = 5  ← TypeError!</span></pre></div>
+<div class="callout cal-g"><span class="cal-ico">🎯</span><p><strong>متى تستخدم Tuple؟</strong> بيانات ثابتة — إحداثيات، RGB، إعدادات. أسرع من List.</p></div></div></div>
+<div class="tab-pane" id="t6c">
+<div class="card"><div class="card-head"><div class="card-ico ico-a">🛠️</div><div class="card-title">دوال مدمجة مفيدة</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>nums = [<span class="nm">3</span>,<span class="nm">1</span>,<span class="nm">4</span>,<span class="nm">1</span>,<span class="nm">5</span>,<span class="nm">9</span>]
+
+<span class="fn">len</span>(nums)    <span class="cm"># 6</span>
+<span class="fn">sum</span>(nums)    <span class="cm"># 23</span>
+<span class="fn">max</span>(nums)    <span class="cm"># 9</span>
+<span class="fn">min</span>(nums)    <span class="cm"># 1</span>
+<span class="fn">sorted</span>(nums) <span class="cm"># نسخة مرتبة</span>
+<span class="fn">any</span>([<span class="kw">False</span>,<span class="kw">True</span>])  <span class="cm"># True</span>
+<span class="fn">all</span>([<span class="kw">True</span>,<span class="kw">True</span>])   <span class="cm"># True</span>
+
+names  = [<span class="st">"Ali"</span>,<span class="st">"Sara"</span>]
+scores = [<span class="nm">90</span>,<span class="nm">85</span>]
+<span class="fn">list</span>(<span class="fn">zip</span>(names, scores))
+<span class="cm"># [("Ali",90),("Sara",85)]</span></pre></div></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — Lists و Tuples</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="6">
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه نتيجة <code>[1,2,3,4,5][1:-1]</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>[1,5]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>[1,2,3,4]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>[2,3,4]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>[2,3,4,5]</div></div><div class="q-explain ok">✅ صح! [1:-1] = من index1 لقبل آخر عنصر = [2,3,4].</div><div class="q-explain bad">❌ غلط! [1:-1]: index1=ثاني عنصر، -1=قبل الأخير → [2,3,4].</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه الفرق بين <code>append</code> و <code>extend</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>append يضيف عنصر واحد، extend يضيف كل عناصر iterable</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>extend يضيف عنصر واحد</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>append أسرع</div></div><div class="q-explain ok">✅ صح! append([1,2]) → عنصر واحد [1,2]. extend([1,2]) → عنصرين 1,2.</div><div class="q-explain bad">❌ غلط! append بيضيف العنصر كله. extend بيفك العناصر.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 3 من 5</div><div class="q-text">إيه نتيجة <code>a, *b = [1,2,3,4]</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>Error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>a=[1,2,3,4], b=[]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>a=1, b=2</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>a=1, b=[2,3,4]</div></div><div class="q-explain ok">✅ صح! *b بياخد باقي العناصر كـ list.</div><div class="q-explain bad">❌ غلط! a=1 (أول عنصر), *b=[2,3,4] (الباقي).</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه نتيجة <code>all([1,2,0,4])</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>False</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>True</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>0</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>Error</div></div><div class="q-explain ok">✅ صح! 0=False، فall بيرجع False.</div><div class="q-explain bad">❌ غلط! all بيرجع True بس لو كل عناصر truthy. 0=False.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 5 من 5</div><div class="q-text">إنشاء tuple بعنصر واحد الصح هو؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span><code>t = (42)</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span><code>t = tuple[42]</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span><code>t = (42,)</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span><code>t = {42}</code></div></div><div class="q-explain ok">✅ صح! (42) = int عادي. لازم فاصلة: (42,).</div><div class="q-explain bad">❌ غلط! (42)=int. Tuple بعنصر واحد لازم فاصلة: (42,).</div></div>
+<div class="quiz-result" id="qr6"><div class="sc" id="qs6">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm6"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(5)">→ السابق</button><button class="btn btn-p" onclick="go(7)">التالي ←</button></div>
+</div></div>
+
+<!-- LESSON 7: Dicts و Sets -->
+<div class="lesson" id="L7">
+<div class="ph"><div class="ph-eye">الدرس السابع</div><div class="ph-title">Dictionaries و Sets</div><div class="ph-desc">Dict = بيانات بمفاتيح وقيم. Set = مجموعة فريدة بدون تكرار.</div><div class="ph-tags"><span class="tag tag-b">dict</span><span class="tag tag-g">set</span><span class="tag tag-a">comprehension</span></div></div>
+<div class="content">
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">📖</div><div class="card-title">Dictionary</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>user = {<span class="st">"name"</span>:<span class="st">"Ahmed"</span>, <span class="st">"age"</span>:<span class="nm">25</span>}
+
+user[<span class="st">"name"</span>]             <span class="cm"># "Ahmed"</span>
+user.<span class="fn">get</span>(<span class="st">"phone"</span>,<span class="st">"N/A"</span>) <span class="cm"># "N/A"</span>
+
+user[<span class="st">"email"</span>] = <span class="st">"a@m.com"</span>
+user.<span class="fn">update</span>({<span class="st">"age"</span>:<span class="nm">26</span>})
+
+<span class="kw">del</span> user[<span class="st">"age"</span>]
+user.<span class="fn">pop</span>(<span class="st">"email"</span>, <span class="kw">None</span>)
+
+user.<span class="fn">keys</span>(); user.<span class="fn">values</span>(); user.<span class="fn">items</span>()
+<span class="st">"name"</span> <span class="kw">in</span> user   <span class="cm"># True</span>
+
+<span class="cm"># Dict Comprehension</span>
+sq = {n: n**<span class="nm">2</span> <span class="kw">for</span> n <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1</span>,<span class="nm">6</span>)}
+
+<span class="cm"># دمج (Python 3.9+)</span>
+merged = {<span class="st">"a"</span>:<span class="nm">1</span>} | {<span class="st">"b"</span>:<span class="nm">2</span>}</pre></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🎯</div><div class="card-title">Set</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre>a = {<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">2</span>,<span class="nm">1</span>}
+<span class="fn">print</span>(a)   <span class="cm"># {1,2,3}</span>
+
+nums = [<span class="nm">1</span>,<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">2</span>,<span class="nm">3</span>]
+unique = <span class="fn">list</span>(<span class="fn">set</span>(nums))  <span class="cm"># [1,2,3]</span>
+
+a = {<span class="nm">1</span>,<span class="nm">2</span>,<span class="nm">3</span>,<span class="nm">4</span>}
+b = {<span class="nm">3</span>,<span class="nm">4</span>,<span class="nm">5</span>,<span class="nm">6</span>}
+a | b   <span class="cm"># اتحاد {1,2,3,4,5,6}</span>
+a & b   <span class="cm"># تقاطع {3,4}</span>
+a - b   <span class="cm"># فرق {1,2}</span>
+
+a.<span class="fn">add</span>(<span class="nm">10</span>); a.<span class="fn">discard</span>(<span class="nm">99</span>)</pre></div></div>
+</div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — Dicts و Sets</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="7">
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه الفرق بين <code>dict["key"]</code> و <code>dict.get("key")</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>[] يطلع KeyError لو مش موجود، .get() يرجع None</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>.get() أسرع</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>[] يرجع None</div></div><div class="q-explain ok">✅ صح! [] يطلع KeyError لو مش موجود. .get() يرجع None.</div><div class="q-explain bad">❌ غلط! []→KeyError لو مش موجود. .get()→None.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه نتيجة <code>{1,2,3} & {2,3,4}</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>{1,2,3,4}</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>{1,4}</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>{2,3}</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>{1,2,3,2,3,4}</div></div><div class="q-explain ok">✅ صح! & = تقاطع = العناصر المشتركة = {2,3}.</div><div class="q-explain bad">❌ غلط! & = intersection = {2,3}.</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 3 من 5</div><div class="q-text">إيه نتيجة <code>{n: n**2 for n in range(1,4)}</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>{1:1, 2:4, 3:9}</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>[1,4,9]</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>{1,4,9}</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>Error</div></div><div class="q-explain ok">✅ صح! Dict Comprehension → {1:1,2:4,3:9}.</div><div class="q-explain bad">❌ غلط! {n: n**2 ...} = dict → {1:1,2:4,3:9}.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 4 من 5</div><div class="q-text">ممكن تعمل الـ Set ده؟ <code>{[1,2], [3,4]}</code></div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>أيوه دايماً</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>أيوه Set بيقبل lists</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>لو فاضية بس</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>لأ، Set بيقبل بس hashable types</div></div><div class="q-explain ok">✅ صح! List مش hashable → TypeError.</div><div class="q-explain bad">❌ غلط! Set بياخد بس hashable (int, str, tuple). List → TypeError.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">الطريقة الصح لدمج dicts في Python 3.9+؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span><code>d1 + d2</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span><code>d1 | d2</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span><code>d1 & d2</code></div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span><code>merge(d1,d2)</code></div></div><div class="q-explain ok">✅ صح! Python 3.9+ بيدعم | لدمج dicts.</div><div class="q-explain bad">❌ غلط! | operator بيدمج dicts من 3.9.</div></div>
+<div class="quiz-result" id="qr7"><div class="sc" id="qs7">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm7"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(6)">→ السابق</button><button class="btn btn-p" onclick="go(8)">التالي ←</button></div>
+</div></div>
+<!-- LESSON 8: OOP -->
+<div class="lesson" id="L8">
+<div class="ph"><div class="ph-eye">الدرس الثامن</div><div class="ph-title">OOP — البرمجة الكائنية</div><div class="ph-desc">Class هو قالب لإنشاء objects. OOP بتنظم الكود وبتخليه قابل للتوسع.</div><div class="ph-tags"><span class="tag tag-b">class</span><span class="tag tag-g">__init__</span><span class="tag tag-a">inheritance</span><span class="tag tag-p">@property</span></div></div>
+<div class="content">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">🧱</div><div class="card-title">Class كامل بالتفصيل</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">class</span> <span class="cl">BankAccount</span>:
+    bank_name = <span class="st">"Python Bank"</span>
+    total = <span class="nm">0</span>
+
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, owner, balance=<span class="nm">0</span>):
+        <span class="kw">self</span>.owner = owner
+        <span class="kw">self</span>._balance = balance
+        <span class="cl">BankAccount</span>.total += <span class="nm">1</span>
+
+    <span class="dc">@property</span>
+    <span class="kw">def</span> <span class="fn">balance</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="kw">self</span>._balance
+
+    <span class="dc">@balance.setter</span>
+    <span class="kw">def</span> <span class="fn">balance</span>(<span class="kw">self</span>, amount):
+        <span class="kw">if</span> amount < <span class="nm">0</span>:
+            <span class="kw">raise</span> ValueError(<span class="st">"الرصيد مش ممكن يبقى سالب"</span>)
+        <span class="kw">self</span>._balance = amount
+
+    <span class="kw">def</span> <span class="fn">deposit</span>(<span class="kw">self</span>, amount):
+        <span class="kw">self</span>._balance += amount
+
+    <span class="kw">def</span> <span class="fn">withdraw</span>(<span class="kw">self</span>, amount):
+        <span class="kw">if</span> amount > <span class="kw">self</span>._balance:
+            <span class="kw">return</span> <span class="kw">False</span>
+        <span class="kw">self</span>._balance -= amount
+        <span class="kw">return</span> <span class="kw">True</span>
+
+    <span class="kw">def</span> <span class="fn">__str__</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="fn">f</span><span class="st">"حساب {self.owner}: {self._balance}"</span>
+
+acc = <span class="cl">BankAccount</span>(<span class="st">"Ahmed"</span>, <span class="nm">1000</span>)
+acc.<span class="fn">deposit</span>(<span class="nm">500</span>)
+<span class="fn">print</span>(acc)   <span class="cm"># حساب Ahmed: 1500</span></pre></div></div>
+
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🔗</div><div class="card-title">الوراثة والـ Polymorphism</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">class</span> <span class="cl">Shape</span>:
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, color=<span class="st">"أبيض"</span>):
+        <span class="kw">self</span>.color = color
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="kw">self</span>):
+        <span class="kw">raise</span> NotImplementedError
+
+<span class="kw">class</span> <span class="cl">Circle</span>(<span class="cl">Shape</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, radius, **kwargs):
+        <span class="fn">super</span>().__init__(**kwargs)
+        <span class="kw">self</span>.radius = radius
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="nm">3.14159</span> * <span class="kw">self</span>.radius**<span class="nm">2</span>
+
+<span class="kw">class</span> <span class="cl">Rectangle</span>(<span class="cl">Shape</span>):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, w, h, **kwargs):
+        <span class="fn">super</span>().__init__(**kwargs)
+        <span class="kw">self</span>.w, <span class="kw">self</span>.h = w, h
+    <span class="kw">def</span> <span class="fn">area</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="kw">self</span>.w * <span class="kw">self</span>.h
+
+shapes = [<span class="cl">Circle</span>(<span class="nm">5</span>), <span class="cl">Rectangle</span>(<span class="nm">4</span>,<span class="nm">6</span>)]
+<span class="kw">for</span> s <span class="kw">in</span> shapes:
+    <span class="fn">print</span>(s.<span class="fn">area</span>())  <span class="cm"># 78.5, 24</span></pre></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — OOP</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="8">
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 1 من 5</div><div class="q-text">إيه وظيفة <code>super().__init__()</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>تنشئ object جديد</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>تنادي __init__ بتاع الـ parent class</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>تحذف الـ object</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>ترجع الـ parent class</div></div><div class="q-explain ok">✅ صح! super() بترجع reference للـ parent، وبنادي init بتاعتها.</div><div class="q-explain bad">❌ غلط! super().__init__() بتنادي constructor الـ parent.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 2 من 5</div><div class="q-text">إيه الفرق بين <code>__str__</code> و <code>__repr__</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>__repr__ للمستخدمين</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>__str__ للمستخدمين، __repr__ للـ debugging</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>__str__ أسرع</div></div><div class="q-explain ok">✅ صح! __str__ = عرض للمستخدم. __repr__ = للـ debugging.</div><div class="q-explain bad">❌ غلط! __str__ للعرض. __repr__ للـ developer/debugging.</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 3 من 5</div><div class="q-text">إيه معنى الـ _ في <code>self._balance</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>Convention بتقول إنه private، مش إجباري</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>Python بتمنع الوصول</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>بيخليه read-only</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>بيحذفه تلقائياً</div></div><div class="q-explain ok">✅ صح! _ = convention بس. Python مش بتمنع الوصول.</div><div class="q-explain bad">❌ غلط! _ مجرد convention. Python نفسها مش بتمنع الوصول.</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه الـ Polymorphism؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>نسخة من class</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>استخدام متغيرات كتير</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>حماية البيانات</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>objects مختلفة بتستجيب لنفس method بطريقة مختلفة</div></div><div class="q-explain ok">✅ صح! كل shape عندها area() لكن بطريقتها.</div><div class="q-explain bad">❌ غلط! Polymorphism = نفس method لكن كل class بتعملها بطريقتها.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 5 من 5</div><div class="q-text">إيه وظيفة <code>@property</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>method تصبح static</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>تحذف المتغير</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>تخلي method تشتغل كـ attribute بدون ()</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>تحمي من الوراثة</div></div><div class="q-explain ok">✅ صح! acc.balance بدون () بفضل @property.</div><div class="q-explain bad">❌ غلط! @property بتخلي method تبدو attribute بدون ().</div></div>
+<div class="quiz-result" id="qr8"><div class="sc" id="qs8">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm8"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(7)">→ السابق</button><button class="btn btn-p" onclick="go(9)">التالي ←</button></div>
+</div></div>
+
+<!-- LESSON 9: Exceptions -->
+<div class="lesson" id="L9">
+<div class="ph"><div class="ph-eye">الدرس التاسع</div><div class="ph-title">الاستثناءات والملفات</div><div class="ph-desc">التعامل مع الأخطاء بشكل صح، وقراءة وكتابة الملفات.</div><div class="ph-tags"><span class="tag tag-b">try/except</span><span class="tag tag-g">raise</span><span class="tag tag-a">with open</span></div></div>
+<div class="content">
+<div class="grid2">
+<div class="card"><div class="card-head"><div class="card-ico ico-c" style="background:var(--coral-lt)">⚠️</div><div class="card-title">try / except / finally</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">try</span>:
+    x = <span class="fn">int</span>(<span class="st">"abc"</span>)
+<span class="kw">except</span> ValueError <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="fn">f</span><span class="st">"قيمة غلط: {e}"</span>)
+<span class="kw">except</span> ZeroDivisionError:
+    <span class="fn">print</span>(<span class="st">"قسمة على صفر!"</span>)
+<span class="kw">except</span> Exception <span class="kw">as</span> e:
+    <span class="fn">print</span>(<span class="fn">f</span><span class="st">"خطأ: {e}"</span>)
+<span class="kw">else</span>:
+    <span class="fn">print</span>(<span class="st">"تمام!"</span>)
+<span class="kw">finally</span>:
+    <span class="fn">print</span>(<span class="st">"دايماً بيتنفذ"</span>)</pre></div></div>
+<div class="card"><div class="card-head"><div class="card-ico ico-g">📁</div><div class="card-title">الملفات</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">with</span> <span class="fn">open</span>(<span class="st">"notes.txt"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="st">"سطر\n"</span>)
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"notes.txt"</span>) <span class="kw">as</span> f:
+    content = f.<span class="fn">read</span>()
+    lines = f.<span class="fn">readlines</span>()
+
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"notes.txt"</span>, <span class="st">"a"</span>) <span class="kw">as</span> f:
+    f.<span class="fn">write</span>(<span class="st">"إضافة\n"</span>)
+
+<span class="kw">import</span> json
+<span class="kw">with</span> <span class="fn">open</span>(<span class="st">"d.json"</span>, <span class="st">"w"</span>) <span class="kw">as</span> f:
+    json.<span class="fn">dump</span>({<span class="st">"a"</span>:<span class="nm">1</span>}, f)</pre></div></div>
+</div>
+<div class="card"><div class="card-head"><div class="card-ico ico-p">🔨</div><div class="card-title">Custom Exceptions</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">class</span> <span class="cl">ValidationError</span>(Exception):
+    <span class="kw">def</span> <span class="fn">__init__</span>(<span class="kw">self</span>, field, msg):
+        <span class="kw">self</span>.field = field
+        <span class="fn">super</span>().__init__(<span class="fn">f</span><span class="st">"{field}: {msg}"</span>)
+
+<span class="kw">def</span> <span class="fn">validate_age</span>(age):
+    <span class="kw">if</span> age < <span class="nm">0</span>:
+        <span class="kw">raise</span> ValidationError(<span class="st">"age"</span>, <span class="st">"مش منطقي"</span>)
+
+<span class="kw">try</span>:
+    <span class="fn">validate_age</span>(-<span class="nm">5</span>)
+<span class="kw">except</span> ValidationError <span class="kw">as</span> e:
+    <span class="fn">print</span>(e)</pre></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — الاستثناءات</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="9">
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 1 من 5</div><div class="q-text">متى بيتنفذ <code>finally</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>بس لو مفيش error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بس لو حصل error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>لو error محدد</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>دايماً بصرف النظر عن أي حاجة</div></div><div class="q-explain ok">✅ صح! finally دايماً بيتنفذ — مفيد لـ cleanup.</div><div class="q-explain bad">❌ غلط! finally دايماً بيتنفذ.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 2 من 5</div><div class="q-text">ليه نستخدم <code>with open()</code> بدل open() عادي؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>أسرع</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بيقفل الملف تلقائياً حتى لو حصل error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>بيمنع الكتابة</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>بيعمل نسخة احتياطية</div></div><div class="q-explain ok">✅ صح! with = Context Manager بيضمن قفل الملف.</div><div class="q-explain bad">❌ غلط! with open() بيضمن قفل الملف تلقائياً.</div></div>
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 3 من 5</div><div class="q-text">الفرق بين وضع "w" و "a"؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>a للقراءة، w للكتابة</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>w يمسح ويكتب من الأول، a يضيف بالآخر</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>w يقفل الملف</div></div><div class="q-explain ok">✅ صح! w=write(يمسح). a=append(يضيف).</div><div class="q-explain bad">❌ غلط! "w" يمسح ويكتب. "a" يضيف بدون مسح.</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 4 من 5</div><div class="q-text">الكلمة الصح لرمي استثناء؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>raise</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>throw</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>error</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>except</div></div><div class="q-explain ok">✅ صح! Python بتستخدم raise مش throw.</div><div class="q-explain bad">❌ غلط! raise ValueError("رسالة") مش throw.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">متى بيتنفذ <code>else</code> في try/except/else؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>دايماً</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بس لو try خلص بدون exception</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>لو except اشتغل</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>بعد finally</div></div><div class="q-explain ok">✅ صح! else بيتنفذ بس لو try نجح بدون exceptions.</div><div class="q-explain bad">❌ غلط! else بيتنفذ بس لو try نجح.</div></div>
+<div class="quiz-result" id="qr9"><div class="sc" id="qs9">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm9"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(8)">→ السابق</button><button class="btn btn-p" onclick="go(10)">التالي ←</button></div>
+</div></div>
+<!-- LESSON 10: Advanced -->
+<div class="lesson" id="L10">
+<div class="ph"><div class="ph-eye">الدرس العاشر — الأخير</div><div class="ph-title">مفاهيم متقدمة 🚀</div><div class="ph-desc">Decorators، Generators، Dataclasses، وأدوات Python القوية.</div><div class="ph-tags"><span class="tag tag-b">decorators</span><span class="tag tag-g">generators</span><span class="tag tag-a">dataclasses</span></div></div>
+<div class="content">
+<div class="tabs"><button class="tab-btn on" onclick="tab(this,'ta1')">Decorators</button><button class="tab-btn" onclick="tab(this,'ta2')">Generators</button><button class="tab-btn" onclick="tab(this,'ta3')">Dataclasses</button><button class="tab-btn" onclick="tab(this,'ta4')">مكتبات</button></div>
+
+<div class="tab-pane on" id="ta1">
+<div class="card"><div class="card-head"><div class="card-ico ico-p">🎀</div><div class="card-title">Decorators</div></div>
+<p>Decorator = دالة بتاخد دالة وبترجع دالة جديدة بسلوك إضافي.</p>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">import</span> time
+<span class="kw">from</span> functools <span class="kw">import</span> wraps
+
+<span class="kw">def</span> <span class="fn">timer</span>(func):
+    <span class="dc">@wraps</span>(func)
+    <span class="kw">def</span> <span class="fn">wrapper</span>(*args, **kwargs):
+        start = time.<span class="fn">time</span>()
+        result = <span class="fn">func</span>(*args, **kwargs)
+        <span class="fn">print</span>(<span class="fn">f</span><span class="st">"{func.__name__}: {time.time()-start:.3f}s"</span>)
+        <span class="kw">return</span> result
+    <span class="kw">return</span> wrapper
+
+<span class="dc">@timer</span>
+<span class="kw">def</span> <span class="fn">slow</span>():
+    time.<span class="fn">sleep</span>(<span class="nm">1</span>)
+
+<span class="fn">slow</span>()
+
+<span class="cm"># Decorator بـ arguments</span>
+<span class="kw">def</span> <span class="fn">repeat</span>(times):
+    <span class="kw">def</span> <span class="fn">decorator</span>(func):
+        <span class="dc">@wraps</span>(func)
+        <span class="kw">def</span> <span class="fn">wrapper</span>(*a, **kw):
+            <span class="kw">for</span> _ <span class="kw">in</span> <span class="fn">range</span>(times):
+                <span class="fn">func</span>(*a, **kw)
+        <span class="kw">return</span> wrapper
+    <span class="kw">return</span> decorator
+
+<span class="dc">@repeat</span>(<span class="nm">3</span>)
+<span class="kw">def</span> <span class="fn">say_hi</span>():
+    <span class="fn">print</span>(<span class="st">"أهلاً!"</span>)
+
+<span class="fn">say_hi</span>()</pre></div></div></div>
+
+<div class="tab-pane" id="ta2">
+<div class="card"><div class="card-head"><div class="card-ico ico-g">🔋</div><div class="card-title">Generators</div></div>
+<p>بيولّد قيمة كل مرة بدل ما يحسبهم كلهم — مفيد جداً مع بيانات ضخمة.</p>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">def</span> <span class="fn">fibonacci</span>(limit):
+    a, b = <span class="nm">0</span>, <span class="nm">1</span>
+    <span class="kw">while</span> a < limit:
+        <span class="kw">yield</span> a
+        a, b = b, a+b
+
+<span class="kw">for</span> n <span class="kw">in</span> <span class="fn">fibonacci</span>(<span class="nm">50</span>):
+    <span class="fn">print</span>(n)  <span class="cm"># 0,1,1,2,3,5,8,13,21,34</span>
+
+<span class="cm"># Generator Expression</span>
+squares = (x**<span class="nm">2</span> <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1000000</span>))
+<span class="fn">next</span>(squares)  <span class="cm"># 0</span>
+<span class="fn">next</span>(squares)  <span class="cm"># 1</span>
+
+<span class="kw">import</span> sys
+lst = [x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1000</span>)]
+gen = (x <span class="kw">for</span> x <span class="kw">in</span> <span class="fn">range</span>(<span class="nm">1000</span>))
+sys.<span class="fn">getsizeof</span>(lst)   <span class="cm"># ~8856 bytes</span>
+sys.<span class="fn">getsizeof</span>(gen)   <span class="cm"># ~120 bytes فقط!</span></pre></div></div></div>
+
+<div class="tab-pane" id="ta3">
+<div class="card"><div class="card-head"><div class="card-ico ico-a">🏗️</div><div class="card-title">Dataclasses</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">from</span> dataclasses <span class="kw">import</span> dataclass, field
+
+<span class="dc">@dataclass</span>
+<span class="kw">class</span> <span class="cl">Student</span>:
+    name: <span class="bi">str</span>
+    grade: <span class="bi">int</span>
+    score: <span class="bi">float</span> = <span class="nm">0.0</span>
+    courses: <span class="fn">list</span> = field(default_factory=<span class="fn">list</span>)
+
+    <span class="kw">def</span> <span class="fn">is_passing</span>(<span class="kw">self</span>):
+        <span class="kw">return</span> <span class="kw">self</span>.score >= <span class="nm">60</span>
+
+s1 = <span class="cl">Student</span>(<span class="st">"Ahmed"</span>, <span class="nm">3</span>, <span class="nm">85.5</span>)
+<span class="fn">print</span>(s1)    <span class="cm"># Student(name='Ahmed', grade=3, score=85.5, courses=[])</span>
+<span class="fn">print</span>(s1.<span class="fn">is_passing</span>())  <span class="cm"># True</span>
+
+<span class="dc">@dataclass</span>(frozen=<span class="kw">True</span>)
+<span class="kw">class</span> <span class="cl">Point</span>:
+    x: <span class="bi">float</span>; y: <span class="bi">float</span></pre></div></div></div>
+
+<div class="tab-pane" id="ta4">
+<div class="card"><div class="card-head"><div class="card-ico ico-b">📦</div><div class="card-title">مكتبات Standard Library</div></div>
+<div class="cw"><div class="cw-head"><span class="cw-lang">python</span><button class="cp-btn" onclick="cp(this)">نسخ</button></div>
+<pre><span class="kw">from</span> collections <span class="kw">import</span> Counter, defaultdict
+<span class="kw">import</span> datetime, json
+
+<span class="cm"># Counter — عدّ التكرارات</span>
+words = [<span class="st">"a"</span>,<span class="st">"b"</span>,<span class="st">"a"</span>,<span class="st">"c"</span>,<span class="st">"a"</span>]
+c = <span class="fn">Counter</span>(words)
+c.<span class="fn">most_common</span>(<span class="nm">2</span>)   <span class="cm"># [('a',3),('b',1)]</span>
+
+<span class="cm"># defaultdict</span>
+dd = <span class="fn">defaultdict</span>(<span class="fn">list</span>)
+dd[<span class="st">"fruits"</span>].<span class="fn">append</span>(<span class="st">"apple"</span>)
+
+<span class="cm"># datetime</span>
+now = datetime.datetime.<span class="fn">now</span>()
+delta = datetime.timedelta(days=<span class="nm">7</span>)</pre></div></div></div>
+
+<div class="quiz-wrap">
+<div class="quiz-header"><h3>🧠 اختبار — مفاهيم متقدمة</h3><p>5 أسئلة</p></div>
+<div class="quiz-body" data-qid="10">
+<div class="quiz-q-wrap" data-correct="ج"><div class="q-num">السؤال 1 من 5</div><div class="q-text">الفرق بين <code>return</code> و <code>yield</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>مفيش فرق</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>yield أسرع</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>return ينهي الدالة، yield يوقفها مؤقتاً ويحفظ الحالة</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>yield قيمة واحدة بس</div></div><div class="q-explain ok">✅ صح! yield بيوقف مؤقتاً ويرجع منه تاني في next().</div><div class="q-explain bad">❌ غلط! return ينهي. yield يوقف مؤقتاً ويحفظ الـ state.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 2 من 5</div><div class="q-text">وظيفة <code>@wraps(func)</code> في Decorator؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>تحمي الدالة</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>تحافظ على اسم ودوكيومنتيشن الدالة الأصلية</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>تسرّع الدالة</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>تحذف decorator</div></div><div class="q-explain ok">✅ صح! بدونها الدالة هتاخد اسم wrapper.</div><div class="q-explain bad">❌ غلط! @wraps بيحافظ على __name__ و__doc__.</div></div>
+<div class="quiz-q-wrap" data-correct="أ"><div class="q-num">السؤال 3 من 5</div><div class="q-text">ليه Generator أوفر في الذاكرة من List؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>بيولّد قيمة واحدة كل مرة مش كلهم</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>نوع بيانات تاني</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>أسرع في المعالجة</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>List أوفر فعلاً</div></div><div class="q-explain ok">✅ صح! Generator lazy evaluation.</div><div class="q-explain bad">❌ غلط! Generator بيولّد قيمة لما تطلبها بـ next().</div></div>
+<div class="quiz-q-wrap" data-correct="د"><div class="q-num">السؤال 4 من 5</div><div class="q-text">إيه اللي بيوفره <code>@dataclass</code>؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>بس __init__</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بس __str__</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>__init__ و __str__ بس</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>__init__ و __repr__ و __eq__ تلقائياً</div></div><div class="q-explain ok">✅ صح! @dataclass بيوفر كتابة boilerplate.</div><div class="q-explain bad">❌ غلط! @dataclass بيعمل __init__,__repr__,__eq__ تلقائياً.</div></div>
+<div class="quiz-q-wrap" data-correct="ب"><div class="q-num">السؤال 5 من 5</div><div class="q-text">وظيفة <code>Counter</code> في collections؟</div><div class="q-opts"><div class="q-opt" onclick="ans(this)"><span class="opt-letter">أ</span>بيحسب حجم list</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ب</span>بيعدّ تكرار كل عنصر</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">ج</span>بيرتب</div><div class="q-opt" onclick="ans(this)"><span class="opt-letter">د</span>بيحذف تكرارات</div></div><div class="q-explain ok">✅ صح! Counter(["a","b","a"]) → {"a":2,"b":1}.</div><div class="q-explain bad">❌ غلط! Counter بيعدّ تكرار كل عنصر.</div></div>
+<div class="quiz-result" id="qr10"><div class="sc" id="qs10">-</div><div class="sc-lbl">نتيجتك</div><div class="msg" id="qm10"></div><button class="retry-btn" onclick="retryQ(this)">🔄 حاول تاني</button></div>
+</div></div>
+<div class="lesson-footer"><button class="btn btn-o" onclick="go(9)">→ السابق</button><button class="btn btn-p" onclick="go(0)">↺ من الأول</button></div>
+</div></div>
+
+</div><!-- /main -->
+
+<script>
+const TOTAL = 11;
+const done = new Set();
+
+function go(i){
+  document.querySelectorAll('.lesson').forEach(l=>l.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(b=>b.classList.remove('active'));
+  document.getElementById('L'+i).classList.add('active');
+  document.querySelectorAll('.nav-item')[i].classList.add('active');
+  document.querySelector('.main').scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav-item').forEach((b,i)=>b.addEventListener('click',()=>go(i)));
+
+function tab(btn,id){
+  const lesson = btn.closest('.lesson');
+  lesson.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('on'));
+  lesson.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
+  btn.classList.add('on');
+  document.getElementById(id).classList.add('on');
+}
+
+function cp(btn){
+  const txt = btn.closest('.cw').querySelector('pre').innerText;
+  navigator.clipboard.writeText(txt).then(()=>{
+    btn.textContent='✓ تم'; btn.classList.add('ok');
+    setTimeout(()=>{btn.textContent='نسخ'; btn.classList.remove('ok');},2000);
+  });
+}
+
+function ans(opt){
+  const qwrap = opt.closest('.quiz-q-wrap');
+  if(qwrap.dataset.done) return;
+  qwrap.dataset.done = '1';
+  const correctLetter = qwrap.dataset.correct;
+  const chosenLetter = opt.querySelector('.opt-letter').textContent;
+  const opts = qwrap.querySelectorAll('.q-opt');
+  opts.forEach(o=>o.classList.add('locked'));
+  const isRight = chosenLetter === correctLetter;
+  opt.classList.add(isRight?'correct':'wrong');
+  if(!isRight){
+    opts.forEach(o=>{
+      if(o.querySelector('.opt-letter').textContent===correctLetter) o.classList.add('correct');
+    });
+  }
+  const fb = qwrap.querySelectorAll('.q-explain');
+  (isRight?fb[0]:fb[1]).classList.add('show');
+
+  const body = qwrap.closest('.quiz-body');
+  const allW = body.querySelectorAll('.quiz-q-wrap');
+  if(Array.from(allW).every(w=>w.dataset.done)){
+    showResult(body, allW);
+  }
+}
+
+function showResult(body, wraps){
+  const qid = body.dataset.qid;
+  let correct = 0;
+  wraps.forEach(w=>{
+    const sel = w.querySelector('.q-opt.correct');
+    if(sel && sel.querySelector('.opt-letter').textContent === w.dataset.correct) correct++;
+  });
+  const total = wraps.length;
+  document.getElementById('qs'+qid).textContent = correct+'/'+total;
+  const pct = (correct/total)*100;
+  let msg;
+  if(pct===100) msg='🏆 ممتاز! أجبت على كل الأسئلة صح!';
+  else if(pct>=80) msg='🎉 رائع! أداء قوي جداً!';
+  else if(pct>=60) msg='👍 كويس! راجع الإجابات الغلط.';
+  else msg='💪 حاول تاني بعد ما تراجع الشرح.';
+  document.getElementById('qm'+qid).textContent = msg;
+  document.getElementById('qr'+qid).classList.add('show');
+
+  done.add(qid);
+  const lessonIdx = parseInt(qid)===0?0:parseInt(qid);
+  const navBtns = document.querySelectorAll('.nav-item');
+  if(navBtns[lessonIdx]) navBtns[lessonIdx].classList.add('done');
+  updateProgress();
+}
+
+function retryQ(btn){
+  const result = btn.closest('.quiz-result');
+  const body = result.closest('.quiz-body');
+  const qid = body.dataset.qid;
+  body.querySelectorAll('.quiz-q-wrap').forEach(w=>{
+    delete w.dataset.done;
+    w.querySelectorAll('.q-opt').forEach(o=>o.classList.remove('correct','wrong','locked'));
+    w.querySelectorAll('.q-explain').forEach(e=>e.classList.remove('show'));
+  });
+  result.classList.remove('show');
+  done.delete(qid);
+  const lessonIdx = parseInt(qid);
+  const navBtns = document.querySelectorAll('.nav-item');
+  if(navBtns[lessonIdx]) navBtns[lessonIdx].classList.remove('done');
+  updateProgress();
+}
+
+function updateProgress(){
+  const pct = Math.round((done.size/10)*100);
+  document.getElementById('pgbar').style.width = pct+'%';
+  document.getElementById('pct').textContent = pct+'%';
+}
+
+function runCode(edId, outId){
+  const code = document.getElementById(edId).value;
+  const out = document.getElementById(outId);
+  out.classList.add('show');
+  const vars = {};
+  const lines = code.split('\n');
+  let results = [];
+  lines.forEach(line=>{
+    const t = line.trim();
+    if(!t || t.startsWith('#')) return;
+    const m = t.match(/^(\w+)\s*=\s*(.+)$/);
+    if(m && !t.startsWith('print')){
+      vars[m[1]] = evalVal(m[2].trim(), vars);
+    }
+    if(t.startsWith('print(')){
+      const inner = t.slice(6,-1);
+      results.push(doPrint(inner, vars));
+    }
+  });
+  out.textContent = results.join('\n') || '// أضف print() لرؤية الناتج';
+}
+
+function evalVal(s, vars){
+  s=s.trim();
+  if((s[0]==='"'&&s.slice(-1)==='"')||(s[0]==="'"&&s.slice(-1)==="'")) return s.slice(1,-1);
+  if(s==='True') return true;
+  if(s==='False') return false;
+  if(s==='None') return null;
+  if(!isNaN(s)&&s!=='') return parseFloat(s);
+  if(vars[s]!==undefined) return vars[s];
+  return s;
+}
+
+function doPrint(inner, vars){
+  if(inner.match(/^f["']/)){
+    const str = inner.slice(2,-1);
+    return str.replace(/\{([^}]+)\}/g,(m,expr)=>{
+      const fmt = expr.match(/^(.+):(.+)$/);
+      let key = fmt?fmt[1].trim():expr.trim();
+      let val = vars[key]!==undefined?vars[key]:key;
+      if(fmt){
+        const spec = fmt[2];
+        if(spec.endsWith('f')){
+          const dec = parseInt(spec.replace('.','').replace('f',''))||2;
+          val = parseFloat(val).toFixed(dec);
+        }
+      }
+      return val;
+    });
+  }
+  if(inner.startsWith('type(')){
+    const v = vars[inner.slice(5,-1).trim()];
+    if(v===null) return "<class 'NoneType'>";
+    if(typeof v==='string') return "<class 'str'>";
+    if(typeof v==='boolean') return "<class 'bool'>";
+    if(Number.isInteger(v)) return "<class 'int'>";
+    if(typeof v==='number') return "<class 'float'>";
+    return "<class 'object'>";
+  }
+  return String(vars[inner]!==undefined?vars[inner]:inner.replace(/["']/g,''));
+}
+</script>
+</body>
+</html>
